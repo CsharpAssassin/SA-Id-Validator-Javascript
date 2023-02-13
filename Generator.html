@@ -1,0 +1,178 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>RSA Id Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    .form-control, button {
+        width: 325px;
+        display: block;
+        height: 30px;
+        border: 1px solid gray;
+        border-radius: 5px;
+    }
+
+    button {
+        width: 325px;
+        margin-top: 15px;
+        color: white;
+        background-color: green;
+        border: 1px solid green;
+        border-radius: 5px;
+    }
+
+        button:hover {
+            background-color: lightgreen;
+            border: 1px solid lightgreen;
+        }
+
+    .main {
+        padding: 2px;
+    }
+
+    label, h1 {
+        font-family: Arial;
+    }
+
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            color: white;
+            text-align: center;
+        }
+</style>
+</head>
+<body>
+    <div class="main">
+        <h1>RSA Id Generator</h1>
+
+        Date:
+        <br />
+        <label id="dateLabel"></label>
+        <br />
+        <input type="date" id="dob" class="form-control" required />
+        <br />
+        Gender:
+        <br />
+        <br />
+        <select class="form-control" id="Gender">
+            <option value="M" selected>Male</option>
+            <option value="F">Female</option>
+        </select>
+        <button type="button" onclick="generateId()">
+            Generate
+        </button>
+    </div>
+
+    <footer>
+        <p>
+            <a href="Index.html">RSA Id Validator</a>
+        </p>
+    </footer>
+
+    <script type="text/javascript">
+
+        function generateId() {
+            var idNumber = "";
+            if (validations()) {
+                var dateOfBirth = document.getElementById("dob").value;
+                var gender = document.getElementById("Gender").value;
+
+                var strDate = String(dateOfBirth);
+
+                var year = strDate.substr(2, 2); //Year
+                var month = strDate.substr(5, 2); //Month
+                var day = strDate.substr(8, 2); //Day
+
+                idNumber = year + month + day;
+                var genderNum = 0;
+                if (gender == "M") {
+                    genderNum = Math.floor(Math.random() * (9999 - 5000 + 1)) + 5000;
+                }
+                else {
+                    genderNum = Math.floor(Math.random() * (4999 - 1000 + 1)) + 1000;
+                }
+                idNumber += genderNum;
+                idNumber += "08";
+                var lastVal = 1;
+                var isValid = validateId(idNumber, lastVal);
+                if (isValid == false) {
+                    for (lastVal = 1; lastVal < 9; lastVal++) {
+
+                        isValid = validateId(idNumber, lastVal);
+                        if (isValid == true) {
+                            break;
+                        }
+                    }
+                }
+                alert(idNumber += lastVal);
+
+            }
+        }
+
+
+        function validations() {
+
+            var dateOfBirth = document.getElementById("dob").value;
+            if (dateOfBirth == "" || dateOfBirth == null || dateOfBirth == undefined) {
+                document.getElementById("dateLabel").innerText = "Date of birth is required";
+                document.getElementById("dateLabel").style.color = "red";
+                return false;
+            }
+            else {
+
+                document.getElementById("dateLabel").innerText = "";
+                return true;
+            }
+        }
+
+        function validateId(id, lastVal) {
+            try {
+                id += lastVal;
+                if (id != null && id != undefined && id.trim() != "") {
+                    var EvensArr = [];
+                    var OddsArr = [];
+                    var countOdd = 0;
+                    var countEven = 0;
+
+                    for (var i = 0; i < id.length; i++) {
+
+                        if ((i % 2) == 0) {
+                            OddsArr[countOdd] = parseInt(id.substr(i, 1));
+                            countOdd++;
+                        }
+                        else {
+                            var Product = id.substr(i, 1) * 2;
+                            if (String(Product).length == 2) {
+                                Product = String(Product).substr(1, 1);
+                                var ProductInt = parseInt(Product) + 1;
+                                Product = ProductInt;
+                            }
+                            EvensArr[countEven] = Product;
+                            countEven++;
+                        }
+
+                    }
+                    const EvenSum = Sum(EvensArr);
+                    const OddSum = Sum(OddsArr);
+                    var SumOfArrays = EvenSum + OddSum;
+                    if ((SumOfArrays % 10) == 0) {
+                        return true;
+                    }
+                }
+                return false;
+            } catch (e) {
+                alert(e);
+                return false;
+            }
+        }
+        const Sum = (arr) => {
+            return arr.reduce((total, current) => {
+                return total + current;
+            }, 0);
+        }
+    </script>
+</body>
+</html>
