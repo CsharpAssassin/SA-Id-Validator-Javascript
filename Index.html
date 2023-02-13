@@ -12,6 +12,7 @@
             height: 30px;
             border: 1px solid gray;
             border-radius: 5px;
+            border: 1px solid green;
         }
 
         button {
@@ -23,10 +24,10 @@
             border-radius: 5px;
         }
 
-            button:hover {
-                background-color: lightgreen;
-                border: 1px solid lightgreen;
-            }
+        button:hover {
+            background-color: lightgreen;
+            border: 1px solid lightgreen;
+        }
 
         .main {
             padding: 2px;
@@ -35,6 +36,7 @@
         label, h1 {
             font-family: Arial;
         }
+
         footer {
             position: fixed;
             left: 0;
@@ -43,20 +45,75 @@
             color: white;
             text-align: center;
         }
+
+        body {
+            font-family: Arial;
+        }
+
+        #copy {
+            width: 56px;
+        }
+        #card-success {
+            border: 1px solid green;
+            padding: 2px;
+            margin: 2px;
+            border-radius: 5px;
+            max-width: 325px
+        }
+        #card-failed {
+            border: 1px solid red;
+            padding: 2px;
+            margin: 2px;
+            border-radius: 5px;
+            max-width: 325px
+        }
+        th{
+            text-align:right;
+        }
     </style>
 </head>
 <body>
-    <div class="main" align="center">
-        <div align="center">
-            <h1>RSA Id Validator</h1>
+    <div class="main">
+        <div>
+            <h1 style="color:green">RSA Id Validator</h1>
         </div>
         <input type="number" id="IdNumber" class="form-control" placeholder="Enter Id Number" />
         <button type="button" onclick="Validator()">
             Validate
         </button>
+        <br />
+        <div id="card-success">
+            <table>
+                <tbody>
+                    <tr>
+                        <th>
+                            Age :
+                        </th>
+                        <td id="age">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Date Of Birth :
+                        </th>
+                        <td id="dob">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Gender :
+                        </th>
+                        <td id="gender">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="card-failed" style="display:none">
+        </div>
         <footer>
             <p>
-
                 <a href="Generator.html">RSA Id Generator</a>
             </p>
         </footer>
@@ -65,8 +122,50 @@
     <script type="text/javascript">
         function Validator() {
             var id = document.getElementById("IdNumber").value;
-            alert(validateId(id));
+            var isValid = validateId(id);
+            if (isValid) {
+                readIdInfo(id);
+                document.getElementById("card-failed").style.display = "none";
+                document.getElementById("card-success").style.display = "block";
+            }
+            else {
+                document.getElementById("card-success").style.display = "none";
+                document.getElementById("card-failed").style.display = "block";
+                document.getElementById("card-failed").innerHTML = "Id Number " + id + " is <strong>invalid!</strong>";
+            }
         }
+
+        function readIdInfo(id) {
+
+            var currentYear = String(new Date().getFullYear());
+            var currentYearNum = currentYear.substr(2, 2);
+
+            var idYear = id.substr(0, 2);
+
+            var age = 0;
+            if (idYear > currentYearNum) {
+                idYear = "19" + idYear;
+            }
+            else {
+                idYear = "20" + idYear;
+            }
+            age = parseInt(currentYear) - idYear;
+
+            document.getElementById("age").innerText = age;
+
+            var genderNum = parseInt(id.substr(6, 4));
+            if (genderNum >4999) {
+                document.getElementById("gender").innerText = "Male";
+            }
+            else {
+
+                document.getElementById("gender").innerText = "Female";
+            }
+            var month = id.substr(2, 2);
+            var day = id.substr(4, 2);
+            document.getElementById("dob").innerText = idYear+"-"+month+"-"+day;
+        }
+
         function validateId(id) {
             try {
                 if (id != null && id != undefined && id.trim() != "") {
