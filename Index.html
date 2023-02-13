@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>RSA Id Validator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .form-control, button {
+            width: 325px;
+            display: block;
+            height: 30px;
+            border: 1px solid gray;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 325px;
+            margin-top: 15px;
+            color: white;
+            background-color: green;
+            border: 1px solid green;
+            border-radius: 5px;
+        }
+
+            button:hover {
+                background-color: lightgreen;
+                border: 1px solid lightgreen;
+            }
+
+        .main {
+            padding: 2px;
+        }
+
+        label, h1 {
+            font-family: Arial;
+        }
+    </style>
+</head>
+<body>
+    <div class="main" align="center">
+        <div align="center">
+            <h1>RSA Id Validator</h1>
+        </div>
+        <input type="number" id="IdNumber" class="form-control" placeholder="Enter Id Number" />
+        <button type="button" onclick="Validator()">
+            Validate
+        </button>
+
+    </div>
+
+    <script type="text/javascript">
+        function Validator() {
+            var id = document.getElementById("IdNumber").value;
+            alert(validateId(id));
+        }
+        function validateId(id) {
+            try {
+                if (id != null && id != undefined && id.trim() != "") {
+                    var EvensArr = [];
+                    var OddsArr = [];
+                    var countOdd = 0;
+                    var countEven = 0;
+
+                    for (var i = 0; i < id.length; i++) {
+
+                        if ((i % 2) == 0) {
+                            OddsArr[countOdd] = parseInt(id.substr(i, 1));
+                            countOdd++;
+                        }
+                        else {
+                            var Product = id.substr(i, 1) * 2;
+                            if (String(Product).length == 2) {
+                                Product = String(Product).substr(1, 1);
+                                var ProductInt = parseInt(Product) + 1;
+                                Product = ProductInt;
+                            }
+                            EvensArr[countEven] = Product;
+                            countEven++;
+                        }
+
+                    }
+                    const EvenSum = Sum(EvensArr);
+                    const OddSum = Sum(OddsArr);
+                    var SumOfArrays = EvenSum + OddSum;
+                    if ((SumOfArrays % 10) == 0) {
+                        return true;
+                    }
+                }
+                return false;
+            } catch (e) {
+                alert(e);
+                return false;
+            }
+        }
+        const Sum = (arr) => {
+            return arr.reduce((total, current) => {
+                return total + current;
+            }, 0);
+        }
+
+    </script>
+</body>
+</html>
