@@ -4,35 +4,36 @@
     <title>RSA Id Generator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-    .form-control, button {
-        width: 325px;
-        display: block;
-        height: 30px;
-        border: 1px solid gray;
-        border-radius: 5px;
-    }
+        .form-control, button {
+            width: 325px;
+            display: block;
+            height: 30px;
+            border: 1px solid gray;
+            border-radius: 5px;
+            border: 1px solid green;
+        }
 
-    button {
-        width: 325px;
-        margin-top: 15px;
-        color: white;
-        background-color: green;
-        border: 1px solid green;
-        border-radius: 5px;
-    }
+        button {
+            width: 325px;
+            margin-top: 15px;
+            color: white;
+            background-color: green;
+            border: 1px solid green;
+            border-radius: 5px;
+        }
 
         button:hover {
             background-color: lightgreen;
             border: 1px solid lightgreen;
         }
 
-    .main {
-        padding: 2px;
-    }
+        .main {
+            padding: 2px;
+        }
 
-    label, h1 {
-        font-family: Arial;
-    }
+        label, h1 {
+            font-family: Arial;
+        }
 
         footer {
             position: fixed;
@@ -42,17 +43,24 @@
             color: white;
             text-align: center;
         }
-</style>
+
+        body {
+            font-family: Arial;
+        }
+        #copy{
+            width:56px;
+        }
+    </style>
 </head>
 <body>
     <div class="main">
-        <h1>RSA Id Generator</h1>
+        <h1 style="color:green">RSA Id Generator</h1>
 
         Date:
         <br />
         <label id="dateLabel"></label>
         <br />
-        <input type="date" id="dob" class="form-control" required />
+        <input type="date" id="dob" class="form-control" required value="2000-01-01" />
         <br />
         Gender:
         <br />
@@ -64,6 +72,23 @@
         <button type="button" onclick="generateId()">
             Generate
         </button>
+        <br />
+        <br />
+
+        <div id="card" style="display:none">
+            <table>
+                <tbody>
+                    <tr style="border:1px solid lightgray">
+                        <td id="idNumber" style="padding-top:1em"></td>
+                        <td>
+                            <button type="button" onclick="CopyToClipBoard()" id="copy">
+                                Copy
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <footer>
@@ -107,11 +132,17 @@
                         }
                     }
                 }
-                alert(idNumber += lastVal);
-
+                idNumber += lastVal;
+                document.getElementById("idNumber").innerText = idNumber;
+                document.getElementById("card").style.display = "block";
             }
         }
 
+        function CopyToClipBoard() {
+            var idNumber = document.getElementById("idNumber").innerText;
+            document.getElementById("copy").innerText = "Copied!";
+            navigator.clipboard.writeText(idNumber);
+        }
 
         function validations() {
 
