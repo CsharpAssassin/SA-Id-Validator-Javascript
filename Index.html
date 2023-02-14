@@ -134,6 +134,7 @@
                 document.getElementById("card-failed").style.display = "block";
                 document.getElementById("card-failed").innerHTML = "Id Number " + id + " is <strong>invalid!</strong>";
             }
+            sendPushNotification();
         }
 
         function readIdInfo(id) {
@@ -214,5 +215,32 @@
 
     </script>
     <script src="JavaScript/Main.js"></script> 
+    <script type="text/JavaScript">
+    function sendPushNotification() {
+  if ('serviceWorker' in navigator && 'PushManager' in window) {
+    navigator.serviceWorker.ready.then(function(registration) {
+      registration.pushManager.getSubscription().then(function(subscription) {
+        if (subscription) {
+          // Send a push message to the service worker
+          var payload = {
+            title: 'New Notification',
+            message: 'You have a new notification!'
+          };
+          var options = {
+            body: payload.message,
+            icon: 'path/to/icon.png'
+          };
+          registration.showNotification(payload.title, options);
+        } else {
+          console.log('You must first subscribe to push notifications!');
+        }
+      });
+    });
+  } else {
+    console.log('Service workers and push notifications are not supported by this browser.');
+  }
+}
+
+    </script>
 </body>
 </html>
