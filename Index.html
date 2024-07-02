@@ -170,7 +170,7 @@
 
         function validateId(id) {
             try {
-                if (id != null && id != undefined && id.trim() != "") {
+                if (id != null && id != undefined && id.trim() != "" && parseInt(id) != 0) {
                     var EvensArr = [];
                     var OddsArr = [];
                     var countOdd = 0;
