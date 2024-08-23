@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signature Form</title>
+  
+</head>
+<body>
+    <form id="signatureForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="signature">Signature:</label>
+        <div class="signature-pad" id="signaturePad" style="border:1px solid gray">
+            <canvas id="signatureCanvas"></canvas>
+        </div>
+        <button type="button" id="clearSignature">Clear</button><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script src="signature.js"></script>
+</body>
+</html>
