@@ -1,65 +1,65 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const canvas = document.getElementById('signatureCanvas');
-    const context = canvas.getContext('2d');
-    const signaturePad = document.getElementById('signaturePad');
-    const clearButton = document.getElementById('clearSignature');
+var canvas = document.querySelector("canvas");
+var ctx = canvas.getContext("2d");
+var cw = (canvas.width = 400), cx = cw / 2;
+var ch = (canvas.height = 400), cy = ch / 2;
+ctx.strokeStyle = "#fff";
+var dibujando = false;
+var m = { x: 0, y: 0 };
 
-    canvas.width = signaturePad.offsetWidth;
-    canvas.height = signaturePad.offsetHeight;
+var eventsRy = [{event:"mousedown",func:"onStart"}, 
+                {event:"touchstart",func:"onStart"},
+                {event:"mousemove",func:"onMove"},
+                {event:"touchmove",func:"onMove"},
+                {event:"mouseup",func:"onEnd"},
+                {event:"touchend",func:"onEnd"},
+                {event:"mouseout",func:"onEnd"}
+               ];
 
-    let drawing = false;
+function onStart(evt) {
+  m = oMousePos(canvas, evt);
+  ctx.beginPath();
+  dibujando = true;
+}
 
-    function getEventPosition(e) {
-        if (e.touches && e.touches.length > 0) {
-            return {
-                x: e.touches[0].clientX - canvas.offsetLeft,
-                y: e.touches[0].clientY - canvas.offsetTop
-            };
-        } else {
-            return {
-                x: e.clientX - canvas.offsetLeft,
-                y: e.clientY - canvas.offsetTop
-            };
-        }
-    }
+function onMove(evt) {
+  if (dibujando) {
+    ctx.moveTo(m.x, m.y);
+    m = oMousePos(canvas, evt);
+    ctx.lineTo(m.x, m.y);
+    ctx.stroke();
+  }
+}
 
-    function startPosition(e) {
-        drawing = true;
-        const pos = getEventPosition(e);
-        context.beginPath();
-        context.moveTo(pos.x, pos.y);
-        draw(e);  // Optional: start drawing immediately
-    }
+function onEnd(evt) {
+  dibujando = false;
+}
 
-    function endPosition() {
-        drawing = false;
-        context.beginPath();
-    }
+function oMousePos(canvas, evt) {
+  var ClientRect = canvas.getBoundingClientRect();
+  var e = evt.touches ? evt.touches[0] : evt;
 
-    function draw(e) {
-        if (!drawing) return;
+    return {
+      x: Math.round(e.clientX - ClientRect.left),
+      y: Math.round(e.clientY - ClientRect.top)
+    };
+}
 
-        const pos = getEventPosition(e);
-        context.lineWidth = 2;
-        context.lineCap = 'round';
-        context.strokeStyle = '#000';
+for (var i = 0; i < eventsRy.length; i++) {
+  (function(i) {
+      var e = eventsRy[i].event;
+      var f = eventsRy[i].func;console.log(f);
+      canvas.addEventListener(e, function(evt) {
+            evt.preventDefault();
+            window[f](evt);
+            return;
+        },false);
+  })(i);
+}
 
-        context.lineTo(pos.x, pos.y);
-        context.stroke();
-        context.beginPath();
-        context.moveTo(pos.x, pos.y);
-    }
-
-    // Handle both mouse and touch events
-    canvas.addEventListener('mousedown', startPosition);
-    canvas.addEventListener('mouseup', endPosition);
-    canvas.addEventListener('mousemove', draw);
-
-    canvas.addEventListener('touchstart', startPosition);
-    canvas.addEventListener('touchend', endPosition);
-    canvas.addEventListener('touchmove', draw);
-
-    clearButton.addEventListener('click', () => {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-    });
-});
+clear.addEventListener(
+  "click",
+  function() {
+    ctx.clearRect(0, 0, cw, ch);
+  },
+  false
+);
