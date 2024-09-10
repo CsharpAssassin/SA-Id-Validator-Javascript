@@ -9,9 +9,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let drawing = false;
 
+    function getEventPosition(e) {
+        if (e.touches && e.touches.length > 0) {
+            return {
+                x: e.touches[0].clientX - canvas.offsetLeft,
+                y: e.touches[0].clientY - canvas.offsetTop
+            };
+        } else {
+            return {
+                x: e.clientX - canvas.offsetLeft,
+                y: e.clientY - canvas.offsetTop
+            };
+        }
+    }
+
     function startPosition(e) {
         drawing = true;
-        draw(e);
+        const pos = getEventPosition(e);
+        context.beginPath();
+        context.moveTo(pos.x, pos.y);
+        draw(e);  // Optional: start drawing immediately
     }
 
     function endPosition() {
@@ -21,19 +38,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function draw(e) {
         if (!drawing) return;
+
+        const pos = getEventPosition(e);
         context.lineWidth = 2;
         context.lineCap = 'round';
         context.strokeStyle = '#000';
 
-        context.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+        context.lineTo(pos.x, pos.y);
         context.stroke();
         context.beginPath();
-        context.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+        context.moveTo(pos.x, pos.y);
     }
 
+    // Handle both mouse and touch events
     canvas.addEventListener('mousedown', startPosition);
     canvas.addEventListener('mouseup', endPosition);
     canvas.addEventListener('mousemove', draw);
+
+    canvas.addEventListener('touchstart', startPosition);
+    canvas.addEventListener('touchend', endPosition);
+    canvas.addEventListener('touchmove', draw);
 
     clearButton.addEventListener('click', () => {
         context.clearRect(0, 0, canvas.width, canvas.height);
