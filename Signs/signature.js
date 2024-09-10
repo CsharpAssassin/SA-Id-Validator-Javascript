@@ -55,7 +55,7 @@ for (var i = 0; i < eventsRy.length; i++) {
         },false);
   })(i);
 }
-
+/*
 clear.addEventListener(
   "click",
   function() {
@@ -63,3 +63,4 @@ clear.addEventListener(
   },
   false
 );
+*/
